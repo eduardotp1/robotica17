@@ -1,4 +1,5 @@
-# coding: utf-8
+#coding: utf8
+
 from random import randint, choice
 import time
 import matplotlib.pyplot as plt
@@ -23,11 +24,8 @@ def convert_to_figure(xy_theta):
 def nb_draw_map(mapa_numpy, particles = None, initial_position=False, pose=False, robot=False):
     """
         particles - um conjunto de partículas definidas como objetos do tipo partícula
-
         initial_position - cor para desenhar a posição inicial do robo
-
         pose - pose do robo
-
         robot - booleano que determina se o robô é desenhado como um círculo ou não
     """
     fig, ax = plt.subplots(figsize=(10,10))
@@ -68,7 +66,6 @@ def nb_draw_arrow(x, y, theta, ax, l = 15, color='y', headwidth=3.0, headlength=
     """
         Desenha uma seta na posição x, y com um ângulo theta
         ax é o contexto gráfico
-
     """
     deltax = l*math.cos(theta)
     deltay = l*math.sin(theta)
@@ -95,9 +92,7 @@ def normalize_particles(particle_cloud):
 def update_robot_pose(particle_cloud, W):
     """ 
         O objetivo deste item é fornecer uma estimativa da pose do robo
-
         Pode-se escolher como isto é feito.
-
         Por exemplo:
             Usar a média de todas as partículas
             Usar as partículas mais provaveis
@@ -258,13 +253,13 @@ def nb_simulate_lidar(robot_pose, angles, img):
             result_img[int(y), int(x)] = 0 # Marcamos o raio na imagem y,x porque numpy e' linha, coluna
             if nb_outside_image(int(x), int(y), img):
                 # A imagem acabou, nao achamos nada
-                lidar_results[ang] = -1   
+                lidar_results[angulo] = float("Inf")
                 print("Outside at ",x ,"  ",y, "  for angle ", ang)
                 break
             dist = nb_found_obstacle(int(y), int(x), y0, x0, img)
             if dist > -1:   
                 # Achamos alguma coisa
-                lidar_results[ang] = dist 
+                lidar_results[angulo] = dist 
                 #print("Hit for ",x,  "  ",y, "  for angle ", ang)                
                 break
             # Keep going if none of the "ifs" has been triggered
