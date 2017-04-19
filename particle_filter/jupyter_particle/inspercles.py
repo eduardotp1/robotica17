@@ -1,5 +1,4 @@
-#coding: utf8
-
+# coding: utf-8
 from random import randint, choice
 import time
 import matplotlib.pyplot as plt
@@ -24,8 +23,11 @@ def convert_to_figure(xy_theta):
 def nb_draw_map(mapa_numpy, particles = None, initial_position=False, pose=False, robot=False):
     """
         particles - um conjunto de partículas definidas como objetos do tipo partícula
+
         initial_position - cor para desenhar a posição inicial do robo
+
         pose - pose do robo
+
         robot - booleano que determina se o robô é desenhado como um círculo ou não
     """
     fig, ax = plt.subplots(figsize=(10,10))
@@ -66,6 +68,7 @@ def nb_draw_arrow(x, y, theta, ax, l = 15, color='y', headwidth=3.0, headlength=
     """
         Desenha uma seta na posição x, y com um ângulo theta
         ax é o contexto gráfico
+
     """
     deltax = l*math.cos(theta)
     deltay = l*math.sin(theta)
@@ -92,7 +95,9 @@ def normalize_particles(particle_cloud):
 def update_robot_pose(particle_cloud, W):
     """ 
         O objetivo deste item é fornecer uma estimativa da pose do robo
+
         Pode-se escolher como isto é feito.
+
         Por exemplo:
             Usar a média de todas as partículas
             Usar as partículas mais provaveis
@@ -193,7 +198,7 @@ def nb_outside_image(x, y, img):
 def nb_found_obstacle(x, y, x0, y0, img):
     gray_value = 1.0 - img[x][y]/255.0
     if gray_value > free_thresh and gray_value < occupied_thresh:
-        return math.sqrt( (x0 - x)**2 + (y0 - x)**2 )
+        return math.sqrt( (x0 - x)**2 + (y0 - y)**2 )
 
         
     
@@ -238,6 +243,15 @@ def nb_simulate_lidar(robot_pose, angles, img):
     
     x0 = robot_pose[0]
     y0 = robot_pose[1]
+
+    # Se o robô simulado (que pode ser uma partícula) já estiver fora da imagem, retornamos zero
+    if nb_outside_image(int(x0), int(y0), img):
+    	for a in angles:
+    		lidar_results[a] = 0
+
+    	return lidar_results, result_img
+
+
     
     for angulo in a:
         # Faz o angulo ser relativo ao robo
@@ -253,7 +267,7 @@ def nb_simulate_lidar(robot_pose, angles, img):
             result_img[int(y), int(x)] = 0 # Marcamos o raio na imagem y,x porque numpy e' linha, coluna
             if nb_outside_image(int(x), int(y), img):
                 # A imagem acabou, nao achamos nada
-                lidar_results[angulo] = float("Inf")
+                lidar_results[angulo] = 0
                 print("Outside at ",x ,"  ",y, "  for angle ", ang)
                 break
             dist = nb_found_obstacle(int(y), int(x), y0, x0, img)
