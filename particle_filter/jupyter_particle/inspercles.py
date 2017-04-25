@@ -111,36 +111,27 @@ def update_robot_pose(particle_cloud, W):
     return robot_pose
         
 def nb_initialize_particle_cloud(xy_theta=None):
-    """ Initialize the particle cloud.
-        Arguments
-        xy_theta: a triple consisting of the mean x, y, and theta (yaw) to initialize the
-                  particle cloud around.  """
+    #xy_theta: a triple consisting of the mean x, y, and theta (yaw) to initialize the
+    #particle cloud around.
     if xy_theta == None:
         #xy_theta = convert_pose_to_xy_and_theta(.odom_pose.pose)
         pass
-    global particle_cloud
     # TODO create particles
-    particle_cloud = nb_create_particles(initial_pose)
+    particle_cloud = nb_create_particles(100,200,100,400,300)
         
-    normalize_particles(particle_cloud)
-    update_robot_pose(particle_cloud, np.ones(len(particle_cloud)))    
+    inspercles.normalize_particles(particle_cloud)
+    inspercles.update_robot_pose(particle_cloud, np.ones(len(particle_cloud)))    
     return particle_cloud
     
-def nb_create_particles(pose, var_x = 50, var_y = 50, var_theta = math.pi/3, num=30):
-    """
-        Cria num particulas
-        situadas no intervalo x - var_x a x + var_x, y - var_x at'e y + var_y e theta - var_theta a theta + var_theta
-    """
+def nb_create_particles(n, minx, miny, maxx, maxy):
     particle_cloud = []
-    s = pose
-    for i in range(num):
-        x = random.uniform(s[0] - var_x, s[0] + var_x)
-        y = random.uniform(s[1] - var_x, s[1] + var_y)
-        theta = random.uniform(s[2] - var_theta, s[2] + var_theta)
+    for i in range(n):
+        x = random.uniform(minx, maxx)
+        y = random.uniform(miny, maxy)
+        theta = random.uniform(math.radians(0), math.radians(360))
         p = Particle(x, y, theta, w=1.0) # A prob. w vai ser normalizada depois
         particle_cloud.append(p)
     return particle_cloud
-
 def nb_draw_robot(position, ax, radius=10):
     """
         Desenha um círculo com uma seta para se passar pelo robô
